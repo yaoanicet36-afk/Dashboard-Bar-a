@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FC Barcelona</title>
+  <link rel="stylesheet" href="barca.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <!-- checkbox trick - drawer sidebar mobile -->
+  <input type="checkbox" id="sidebarCheck" class="sidebar-check">
+  <label for="sidebarCheck" class="sidebar-backdrop"></label>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <label for="sidebarCheck" class="hamburger-btn" aria-label="Menu joueurs">☰</label>
+    <div class="brand">
+
+      <!-- Logo officiel Barça -->
+      <img src="assets/logo_barca-re.jpg" alt="Logo FC Barcelona" class="logo">
+      <div>
+        <div class="t1">FC Barcelone</div>
+        <div class="t2"></div>
+      </div>
+    </div>
+
+    <!-- Onglets navigation -->
+
+    <div class="nav-tabs">
+      <button class="tab on"   onclick="goTab('joueur',this)">Fiche joueur</button>
+      <button class="tab"      onclick="goTab('stats26',this)">Stats</button>
+      <button class="tab"      onclick="goTab('ranking',this)">Classements</button>
+      <button class="tab"      onclick="goTab('prog',this)">Progression</button>
+      <button class="tab"      onclick="goTab('custom',this)">Ma compo</button>
+      <button class="tab"      onclick="goTab('xi',this)">XI Type</button>
+      <button class="tab"      onclick="goTab('cmp',this)">Comparaison</button>
+      <button class="tab"      onclick="goTab('rec',this)">Renforcement postes</button>
+      <button class="tab"      onclick="goTab('prets',this)">Prêtés</button>
+       <button class="tab"      onclick="goTab('recrues',this)">Analyse Cibles</button>
+      <button class="tab tab-mercato" onclick="goTab('mercato',this)">Mon mercato</button>
+    </div>
+  
+  </div>
+
+  <!-- CORPS DU PROJET-->
+  <div class="body">
+
+    <!-- Sidebar liste joueurs -->
+    <div class="sidebar" id="sidebar"></div>
+
+    <!-- Zone contenu principal -->
+    <div class="main">
+
+      <!-- VUE : FICHE JOUEUR  -->
+
+      <div class="view on" id="v-joueur">
+
+        <!-- Ligne 1 : Hero · Stats off · Stats def · Radar -->
+
+        <div class="row" style="flex:0 0 auto;">
+          <div class="card" style="flex:2.2;">
+            <div class="hero-wrap">
+              <div class="hero-l">
+                <div class="hero-img" id="hImg"></div>
+                <div class="hero-num" id="hNum"></div>
+              </div>
+              <div class="hero-r">
+                <div>
+                  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                    <div class="hero-name" id="hName"></div>
+                    <span class="badge" id="hNot"></span>
+                    <span id="hLoanBadge"></span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:7px;margin-top:4px;flex-wrap:wrap;">
+                    <span class="badge" id="hPos" style="background:var(--B);color:#fff;"></span>
+                    <span class="hero-meta" id="hMeta"></span>
+                  </div>
+                </div>
+                <div class="kpis" id="hKpi"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="flex:1.1;">
+            <div class="p" style="height:100%;display:flex;flex-direction:column;">
+              <div class="stitle">Offensif</div>
+              <div class="sg" style="grid-template-columns:repeat(2,1fr);flex:1;" id="sOff"></div>
+            </div>
+          </div>
+          <div class="card" style="flex:1.1;">
+            <div class="p" style="height:100%;display:flex;flex-direction:column;">
+              <div class="stitle">Défensif</div>
+              <div class="sg" style="grid-template-columns:repeat(2,1fr);flex:1;" id="sDef"></div>
+            </div>
+          </div>
+          <div class="card" style="flex:1.2;">
+            <div class="p" style="height:100%;display:flex;flex-direction:column;">
+              <div class="stitle">Radar performance</div>
+              <div style="flex:1;position:relative;min-height:90px;">
+                <canvas id="cRadar" style="position:absolute;inset:0;width:100%!important;height:100%!important;" aria-label="Radar de performance"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ligne 2 : Terrain d'action grand format -->
+
+        <div class="card" style="flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;">
+          <div class="p" style="padding-bottom:4px;flex-shrink:0;">
+            <div class="stitle"></div>
+          </div>
+          <div style="flex:1;min-height:0;padding:0 10px 10px;">
+            <svg id="svgPitch" viewBox="0 0 700 260" style="width:100%;height:100%;display:block;border-radius:8px;" aria-label="Terrain de football"></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Les stats de la saison 2025-26 -->
+      <div class="view" id="v-stats26">
+        <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
+          <div style="font-size:13px;font-weight:800;">Stats de chaque joueur</div>
+          <div style="font-size:10px;padding:3px 10px;border-radius:10px;background:rgba(0,77,152,.2);border:1px solid rgba(0,77,152,.4);color:#5599ee;">
+            1er La Liga · QF UCL · Supercopa ✓ · Copa demi-finales
+          </div>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+            <label style="font-size:9px;color:var(--t2);">Filtrer :</label>
+            <select id="posFilter26" onchange="filterByPos()" class="sel-inp" style="width:auto;">
+              <option value="ALL">Tous</option>
+              <option value="GK">Gardiens</option>
+              <option value="DF">Défenseurs</option>
+              <option value="MF">Milieux</option>
+              <option value="FW">Attaquants</option>
+            </select>
+          </div>
+        </div>
+        <div class="stats-wrap">
+          <div class="stats-sb" id="statsSb26"></div>
+          <div class="stats-main">
+            <div class="stat-tabs">
+              <button class="stat-tab on" onclick="setStatCat('general',this)">Général</button>
+              <button class="stat-tab" onclick="setStatCat('offensif',this)">Offensif</button>
+              <button class="stat-tab" onclick="setStatCat('defensif',this)">Défensif</button>
+              <button class="stat-tab" onclick="setStatCat('passes',this)">Passes</button>
+              <button class="stat-tab" onclick="setStatCat('pressing',this)">Pressing</button>
+              <button class="stat-tab" onclick="setStatCat('matchs',this)">Notes/match</button>
+              <button class="stat-tab" onclick="setStatCat('classement',this)">Classement poste</button>
+            </div>
+            <div id="statsContent26" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLASSEMENT SELON LES STATS -->
+      <div class="view" id="v-ranking">
+        <div style="font-size:13px;font-weight:700;flex-shrink:0;">Classements individuels</div>
+        <div class="rk-grid" id="rkGrid"></div>
+      </div>
+
+      <!-- PROGRESSION DES JOUEURS -->
+      <div class="view" id="v-prog">
+        <div class="prog-wrap">
+          <div class="prog-sb" id="progSb"></div>
+          <div class="prog-main">
+            <div class="row" style="flex:0 0 auto;">
+              <div class="card" style="flex:1;padding:9px 12px;">
+                <div class="stitle">Joueur sélectionné</div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div id="pImg" style="width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;"></div>
+                  <div id="pInfo"></div>
+                </div>
+              </div>
+              <div class="card" style="flex:3;padding:8px 10px;">
+                <div style="display:flex;gap:5px;flex-wrap:wrap;" id="pMini"></div>
+              </div>
+            </div>
+            <div class="card" style="flex:1;min-height:130px;padding:10px 12px;overflow:hidden;">
+              <div class="stitle">Buts &amp; Passes - match par match (La Liga + UCL + Copa)</div>
+              <div style="position:relative;height:calc(100% - 20px);">
+                <canvas id="cProg" style="position:absolute;inset:0;width:100%!important;height:100%!important;"></canvas>
+              </div>
+            </div>
+            <div class="card" style="flex:1;min-height:110px;padding:10px 12px;overflow:hidden;">
+              <div class="stitle">Note par match</div>
+              <div style="position:relative;height:calc(100% - 20px);">
+                <canvas id="cNote" style="position:absolute;inset:0;width:100%!important;height:100%!important;"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MA COMPO PERSONNALISEE -->
+
+      <div class="view" id="v-custom">
+        <div style="font-size:13px;font-weight:700;flex-shrink:0;">
+          Ma composition personnalisée
+          <span style="font-size:9px;font-weight:400;color:var(--t2);"></span>
+        </div>
+        <div class="custom-wrap">
+          <div class="custom-left">
+            <div class="card p">
+              <div class="stitle">Formation</div>
+              <div style="display:flex;flex-direction:column;gap:4px;" id="custBtns"></div>
+            </div>
+            <div class="card p">
+              <div class="stitle">Note ma compo</div>
+              <div id="custNote" style="font-size:22px;font-weight:800;">—</div>
+            </div>
+            <div class="card p" style="flex:1;overflow-y:auto;">
+              <div class="stitle">Mes 11 joueurs</div>
+              <div id="custList"></div>
+            </div>
+            <div class="card p" style="flex-shrink:0;">
+              <button onclick="resetCustom()" class="form-btn">Réinitialiser</button>
+            </div>
+          </div>
+          <div class="card" style="flex:1;overflow:hidden;">
+            <svg id="svgCustom" viewBox="0 0 440 620" style="width:100%;height:100%;display:block;"></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- XI TYPE SAISON 2025-26 -->
+
+      <div class="view" id="v-xi">
+        <div class="xi-wrap">
+          <div class="xi-sb">
+            <div class="card p">
+              <div class="stitle">XI Type 2025-26</div>
+              <div style="font-size:20px;font-weight:800;">4-2-3-1</div>
+              <div style="font-size:8px;color:var(--t2);margin-top:2px;"></div>
+            </div>
+            <div class="card p">
+              <div class="stitle">Note moyenne XI</div>
+              <div id="xi25note" style="font-size:20px;font-weight:800;"></div>
+            </div>
+            <div class="card p" style="flex:1;">
+              <div class="stitle" style="margin-bottom:8px;">Légende</div>
+              <div class="lg-row"><div class="lg-dot" style="background:#3e9e1f;"></div>≥ 7.5 Excellent</div>
+              <div class="lg-row"><div class="lg-dot" style="background:#c88a00;"></div>≥ 7.0 Bon</div>
+              <div class="lg-row"><div class="lg-dot" style="background:#8b2020;"></div>&lt; 7.0 Correct</div>
+              <div style="margin-top:10px;font-size:8px;color:var(--t2);"></div>
+            </div>
+          </div>
+          <div class="card" style="flex:1;overflow:hidden;">
+            <svg id="svgXi" viewBox="0 0 440 620" style="width:100%;height:100%;display:block;"></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMPARAISON -->
+
+      <div class="view" id="v-cmp">
+        <div class="cmp-outer">
+          <div class="cmp-top">
+            <div class="card p" style="flex:1;">
+              <div class="stitle">Joueur 1 (Barça)</div>
+              <select class="sel-inp" id="cmpS1" onchange="doCmp()"></select>
+            </div>
+            <div class="card p" style="flex:1;">
+              <div class="stitle">Joueur 2</div>
+              <select class="sel-inp" id="cmpS2" onchange="doCmp()"></select>
+            </div>
+            <div class="card p" style="flex:0 0 auto;">
+              <div class="stitle">Type joueur 2</div>
+              <div style="display:flex;gap:5px;">
+                <button id="cmpTypeBarca"  onclick="setCmpType('barca')"  style="padding:5px 10px;border-radius:6px;border:1px solid var(--B);background:rgba(0,77,152,.22);color:#fff;font-size:10px;font-weight:700;cursor:pointer;">🔵 Barça</button>
+                <button id="cmpTypeRecrue" onclick="setCmpType('recrue')" style="padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--t2);font-size:10px;font-weight:700;cursor:pointer;">🔴 Cible recrue</button>
+              </div>
+            </div>
+            <div class="card p" style="flex:0 0 225px;display:flex;flex-direction:column;">
+              <div class="stitle">Radar comparatif</div>
+              <div style="display:flex;gap:6px;margin-bottom:5px;">
+                <span style="display:flex;align-items:center;gap:3px;font-size:9px;color:var(--t2);">
+                  <span style="width:8px;height:8px;border-radius:2px;background:var(--R);display:inline-block;"></span>
+                  <span id="cmpL1"></span>
+                </span>
+                <span style="display:flex;align-items:center;gap:3px;font-size:9px;color:var(--t2);">
+                  <span style="width:8px;height:8px;border-radius:2px;background:var(--B);display:inline-block;"></span>
+                  <span id="cmpL2"></span>
+                </span>
+              </div>
+              <div style="position:relative;flex:1;min-height:110px;">
+                <canvas id="cCmp" style="position:absolute;inset:0;width:100%!important;height:100%!important;"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="cmp-bottom" id="cmpCards"></div>
+        </div>
+      </div>
+
+      <!-- COMPARAISON ENTRE LES RECRUES -->
+
+      <div class="view" id="v-recrues">
+        <div style="flex-shrink:0;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <div style="font-size:13px;font-weight:800;">🔍 Analyse Cibles - Comparaison</div>
+          <div style="font-size:9px;color:var(--t2);">Comparez les cibles entre elles - Stats et Radar</div>
+        </div>
+        <!-- Sélecteurs -->
+        <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;" id="recruesSelRow">
+          <div class="card p" style="flex:1;min-width:160px;">
+            <div class="stitle">Recrue A</div>
+            <select class="sel-inp" id="recA" onchange="doRecueCmp()"></select>
+          </div>
+          <div class="card p" style="flex:1;min-width:160px;">
+            <div class="stitle">Recrue B</div>
+            <select class="sel-inp" id="recB" onchange="doRecueCmp()"></select>
+          </div>
+          <div class="card p" style="flex:0 0 240px;">
+            <div class="stitle">Filtrer par poste</div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap;" id="recuePosFil"></div>
+          </div>
+          <div class="card p" style="flex:0 0 220px;">
+            <div class="stitle">Radar comparatif</div>
+            <div style="position:relative;height:130px;">
+              <canvas id="cRecueCmp" style="position:absolute;inset:0;width:100%!important;height:100%!important;"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cartes stats -->
+        <div style="flex:1;min-height:0;overflow-y:auto;" id="recueCmpCards"></div>
+      </div>
+
+      <!-- RECRUTEMENT - ANALYSE DES BESOINS -->
+      <div class="view" id="v-rec">
+        <div style="flex-shrink:0;display:flex;align-items:baseline;gap:10px;">
+          <div style="font-size:13px;font-weight:800;">Analyse Renforcement de postes - Été 2026</div>
+          <div style="font-size:9px;color:var(--t2);"></div>
+        </div>
+        <div class="rec-wrap">
+
+          <!-- Panneau gauche : postes + formulaire ajout -->
+          <div class="rec-left">
+            <div class="card p">
+              <div class="stitle">Postes à recruter</div>
+              <div style="display:flex;flex-direction:column;gap:4px;" id="recPosBtns"></div>
+            </div>
+            <!-- Formulaire ajout joueur cible -->
+            <div class="card p" style="flex:1;overflow-y:auto;">
+              <div class="stitle">Ajouter une cible</div>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div class="form-group">
+                  <label class="form-label">Nom du joueur</label>
+                  <input id="recName" class="form-input" type="text" placeholder="">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Club actuel</label>
+                  <input id="recClub" class="form-input" type="text" placeholder="">
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                  <div class="form-group">
+                    <label class="form-label">Âge</label>
+                    <input id="recAge" class="form-input" type="number" placeholder="" min="" max="">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Valeur (M€)</label>
+                    <input id="recMV" class="form-input" type="text" placeholder="">
+                  </div>
+                </div>
+                <div class="stitle" style="margin-bottom:2px;">Stats cette saison</div>
+                <div class="stats-grid-form">
+                  <div class="form-group"><label class="form-label">Matchs</label><input id="rMP" class="form-input" type="number" placeholder="30" min="0"></div>
+                  <div class="form-group"><label class="form-label">Buts</label><input id="rG" class="form-input" type="number" placeholder="12" min="0"></div>
+                  <div class="form-group"><label class="form-label">Passes déc.</label><input id="rA" class="form-input" type="number" placeholder="8" min="0"></div>
+                  <div class="form-group"><label class="form-label">xG</label><input id="rXG" class="form-input" type="number" placeholder="10.5" step="0.1" min="0"></div>
+                  <div class="form-group"><label class="form-label">Minutes</label><input id="rMin" class="form-input" type="number" placeholder="2500" min="0"></div>
+                  <div class="form-group"><label class="form-label">Note moy.</label><input id="rNote" class="form-input" type="number" placeholder="7.2" step="0.01" min="0" max="10"></div>
+                  <div class="form-group"><label class="form-label">Tacles</label><input id="rTck" class="form-input" type="number" placeholder="35" min="0"></div>
+                  <div class="form-group"><label class="form-label">Interceptions</label><input id="rInt" class="form-input" type="number" placeholder="22" min="0"></div>
+                  <div class="form-group"><label class="form-label">Passes clés</label><input id="rKP" class="form-input" type="number" placeholder="48" min="0"></div>
+                </div>
+                <button onclick="addRecrue()" class="btn-primary">Ajouter cette cible</button>
+                <div id="recAddMsg" style="font-size:9px;color:var(--t2);text-align:center;min-height:14px;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panneau droit : tableau comparatif -->
+          <div class="rec-right">
+            <div class="card p" style="flex-shrink:0;">
+              <div id="recPosTitle" style="font-size:13px;font-weight:700;">Sélectionnez un poste pour comparer</div>
+              <div id="recPosDesc" style="font-size:9px;color:var(--t2);margin-top:3px;"></div>
+            </div>
+            <div class="card" style="flex:1;overflow:hidden;padding:10px 12px;display:flex;flex-direction:column;">
+              <div class="stitle">Tableau comparatif</div>
+              <div style="flex:1;overflow:auto;">
+                <table class="recruit-table" id="recTable">
+                  <thead>
+                    <tr>
+                      <th>Joueur</th>
+                      <th>Club</th>
+                      <th style="text-align:right;">Note</th>
+                      <th style="text-align:right;">Buts</th>
+                      <th style="text-align:right;">Passes</th>
+                      <th style="text-align:right;">xG</th>
+                      <th style="text-align:right;">Min</th>
+                      <th style="text-align:right;">Tck+Int</th>
+                      <th style="text-align:right;">Passes clés</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="recTableBody">
+                    <tr><td colspan="10" style="text-align:center;color:var(--t2);padding:20px;"></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Radar comparatif des recrues -->
+            <div class="card p" style="flex:0 0 280px;display:flex;flex-direction:column;gap:6px;">
+              <div class="stitle">Radar comparatif (Cibles vs meilleur du poste)</div>
+              <div id="recRadarSel" style="display:flex;flex-wrap:wrap;gap:3px;min-height:18px;"></div>
+              <div style="position:relative;height:220px;">
+                <canvas id="cRecRadar" style="position:absolute;inset:0;width:100%!important;height:100%!important;"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- JOUEURS EN PRÊT -->
+      <div class="view" id="v-prets">
+        <div style="flex-shrink:0;display:flex;align-items:baseline;gap:10px;">
+          <div style="font-size:13px;font-weight:800;">Joueurs prêtés</div>
+          <div style="font-size:9px;color:var(--t2);">Suivi de leur évolution</div>
+        </div>
+        <div class="loan-out-grid" id="loanGrid"></div>
+      </div>
+
+      <!-- MON MERCATO IDEAL ET EN FONCTION DES BESOINS -->
+      <div class="view" id="v-mercato">
+        <div style="flex-shrink:0;margin-bottom:4px;">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <div style="font-size:13px;font-weight:800;">Simuler mon mercato (été 2026)</div>
+            <div style="font-size:9px;color:var(--t2);">Vendre · Acheter · Rappeler des joueurs prêtés</div>
+            <button onclick="resetMercato()" style="margin-left:auto;padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--t2);font-size:10px;font-weight:700;cursor:pointer;">Réinitialiser tout</button>
+          </div>
+          <div id="mercatoBudgetBar" class="merc-budget-bar" style="margin-top:5px;padding:5px 8px;"></div>
+        </div>
+
+        <div style="display:flex;gap:8px;flex:1;min-height:0;overflow:hidden;">
+
+          <!-- Effectif à vendre -->
+          <div style="width:228px;flex:0 0 228px;display:flex;flex-direction:column;gap:8px;overflow:hidden;">
+            <div class="card p" style="flex-shrink:0;">
+              <div class="stitle">Effectif actuel</div>
+              <div style="font-size:8px;color:var(--t2);">💸 = Vendre · ↩ = Annuler</div>
+            </div>
+            <div class="card" style="flex:1;overflow-y:auto;padding:4px;" id="mercatoSquadList"></div>
+          </div>
+
+          <!-- Recrues + Prêtés -->
+          <div style="width:245px;flex:0 0 245px;display:flex;flex-direction:column;gap:8px;overflow:hidden;">
+            <div class="card p" style="flex-shrink:0;">
+              <div class="stitle">Recrues et Prêtés</div>
+              <div style="font-size:8px;color:var(--t2);">✅ = Acheter · ⬅ = Rappeler · ↩ = Annuler</div>
+            </div>
+            <div class="card" style="flex:1;overflow-y:auto;padding:4px;" id="mercatoRecruesList"></div>
+          </div>
+
+          <!-- XI projeté -->
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;overflow:hidden;">
+            <div style="display:flex;gap:4px;flex-shrink:0;align-items:stretch;">
+              <div class="card p" style="flex:0 0 auto;padding:6px 12px;display:flex;align-items:center;gap:12px;">
+                <div>
+                  <div class="stitle" style="margin-bottom:4px;">Formation</div>
+                  <select id="mercatoFormSelect" class="merc-form-select" onchange="onMercatoFormChange(this.value)"></select>
+                </div>
+                <div id="mercatoBtns" style="display:none;"></div>
+              </div>
+              <div class="card p" style="flex:1;padding:6px 10px;">
+                <div class="stitle" style="margin-bottom:2px;">Note projetée</div>
+                <div id="mercatoNote" style="font-size:17px;font-weight:800;">—</div>
+                <div style="font-size:8px;color:var(--t2);margin-top:2px;line-height:1.3;">Cliquez les postes sur le terrain</div>
+                <button onclick="resetMercatoXI()" style="margin-top:5px;width:100%;padding:3px;border-radius:5px;border:1px solid var(--border);background:var(--bg3);color:var(--t2);font-size:9px;font-weight:700;cursor:pointer;">Vider le XI</button>
+              </div>
+            </div>
+            <div class="card" style="flex:1;min-height:0;overflow:hidden;padding:0;">
+              <svg id="svgMercato" viewBox="0 0 440 620" style="width:100%;height:100%;display:block;"></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modale sélection joueur (composition perso) -->
+<div class="picker-overlay" id="pickerOverlay" onclick="closePicker(event)">
+  <div class="picker-box">
+    <div class="picker-hd">
+      <div class="picker-title" id="pickerTitle">Choisir un joueur</div>
+      <button class="picker-close" onclick="closePicker()" aria-label="Fermer">✕</button>
+    </div>
+    <div class="picker-list" id="pickerList"></div>
+  </div>
+</div>
+
+<script src="barca.js"></script>
+</body>
+</html>
