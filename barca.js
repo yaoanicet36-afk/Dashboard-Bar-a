@@ -1538,11 +1538,16 @@ function updateCustList() {
 }
 function renderCustomPitch() {
   var nodes = custXI.map(function (slot, idx) {
-    if (slot.player) { var p = slot.player; return '<g onclick="openPicker(' + idx + ')" style="cursor:pointer;">' + playerNode(p.n, p.col, p.ph, slot.tx, slot.ty, p.note, false, slot.role) + '</g>'; }
-    return '<g onclick="openPicker(' + idx + ')" style="cursor:pointer;"><circle cx="' + slot.tx + '" cy="' + slot.ty + '" r="26" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.3)" stroke-width="2" stroke-dasharray="6,4"/><text x="' + slot.tx + '" y="' + (slot.ty - 4) + '" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="18" font-family="system-ui">+</text><text x="' + slot.tx + '" y="' + (slot.ty + 12) + '" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="8" font-family="system-ui">' + slot.role + '</text></g>';
+    if (slot.player) {
+      var p = slot.player;
+      return '<g data-drag-idx="' + idx + '" style="cursor:grab;">' + playerNode(p.n, p.col, p.ph, slot.tx, slot.ty, p.note, false, slot.role) + '</g>';
+    }
+    return '<g data-drag-idx="' + idx + '" onclick="openPicker(' + idx + ')" style="cursor:pointer;"><circle cx="' + slot.tx + '" cy="' + slot.ty + '" r="26" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.3)" stroke-width="2" stroke-dasharray="6,4"/><text x="' + slot.tx + '" y="' + (slot.ty - 4) + '" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="18" font-family="system-ui">+</text><text x="' + slot.tx + '" y="' + (slot.ty + 12) + '" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="8" font-family="system-ui">' + slot.role + '</text></g>';
   }).join('');
-  document.getElementById('svgCustom').innerHTML = pitchV() + nodes;
+  var svgEl = document.getElementById('svgCustom');
+  svgEl.innerHTML = pitchV() + nodes;
   updateCustNote(); updateCustList();
+  makeDraggable(svgEl, custXI, renderCustomPitch);
 }
 function rmSlot(idx) { custXI[idx].player = null; renderCustomPitch(); }
 function openPicker(idx) {
@@ -1574,11 +1579,13 @@ function closePicker(evt) {
 function drawXI() {
   var avg = (XI_2526.reduce(function (a, b) { return a + b.note; }, 0) / XI_2526.length).toFixed(2);
   document.getElementById('xi25note').textContent = avg + '/10';
-  var nodes = XI_2526.map(function (item) {
+  var nodes = XI_2526.map(function (item, idx) {
     var pr = getP(item.n) || { col: '#004D98', ph: item.n };
-    return playerNode(item.n, pr.col, pr.ph, item.tx, item.ty, item.note, false, '');
+    return '<g data-drag-idx="' + idx + '" style="cursor:grab;">' + playerNode(item.n, pr.col, pr.ph, item.tx, item.ty, item.note, false, '') + '</g>';
   }).join('');
-  document.getElementById('svgXi').innerHTML = pitchV() + nodes;
+  var svgEl = document.getElementById('svgXi');
+  svgEl.innerHTML = pitchV() + nodes;
+  makeDraggable(svgEl, XI_2526, drawXI);
 }
 
 
@@ -2530,11 +2537,11 @@ function renderMercatoPitch() {
     if (slot.player) {
       var p = slot.player;
       var isNew = !!p.isRecrue || !!p.isRappele;
-      return '<g onclick="openMercatoPicker(' + idx + ')" style="cursor:pointer;">' +
+      return '<g data-drag-idx="' + idx + '" style="cursor:grab;">' +
         playerNode(p.n, p.col, p.ph, slot.tx, slot.ty, p.note || 6.5, isNew, slot.role) +
         '</g>';
     }
-    return '<g onclick="openMercatoPicker(' + idx + ')" style="cursor:pointer;">' +
+    return '<g data-drag-idx="' + idx + '" onclick="openMercatoPicker(' + idx + ')" style="cursor:pointer;">' +
       '<circle cx="' + slot.tx + '" cy="' + slot.ty + '" r="26" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.3)" stroke-width="2" stroke-dasharray="6,4"/>' +
       '<text x="' + slot.tx + '" y="' + (slot.ty - 4) + '" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="18" font-family="system-ui">+</text>' +
       '<text x="' + slot.tx + '" y="' + (slot.ty + 12) + '" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="8" font-family="system-ui">' + slot.role + '</text>' +
@@ -2543,6 +2550,7 @@ function renderMercatoPitch() {
   svgEl.innerHTML = pitchV() + nodes;
   updateMercatoNote();
   updateMercatoBudget();
+  makeDraggable(svgEl, mercatoXI, renderMercatoPitch);
 }
 
 function createPickerAvatar(p) {
@@ -2967,3 +2975,87 @@ function doRecueCmp() {
   doPrets();
   doMercato();
 })();
+
+/* ── Drag & Drop joueurs sur terrain SVG ── */
+function makeDraggable(svgEl, dataArr, renderFn) {
+  var drag = null;
+
+  function svgCoords(e) {
+    var src = e.touches ? e.touches[0] : e;
+    var pt = svgEl.createSVGPoint();
+    pt.x = src.clientX;
+    pt.y = src.clientY;
+    return pt.matrixTransform(svgEl.getScreenCTM().inverse());
+  }
+
+  svgEl.querySelectorAll('[data-drag-idx]').forEach(function(g) {
+    var idx = parseInt(g.getAttribute('data-drag-idx'), 10);
+
+    function onStart(e) {
+      // poste vide → ouvrir picker, pas de drag
+      if (!dataArr[idx] || (dataArr[idx].player === null && dataArr[idx].player !== undefined)) return;
+      e.stopPropagation();
+      var pos = svgCoords(e);
+      drag = {
+        idx: idx,
+        g: g,
+        startX: dataArr[idx].tx,
+        startY: dataArr[idx].ty,
+        mouseX: pos.x,
+        mouseY: pos.y,
+        moved: false
+      };
+      g.style.filter = 'drop-shadow(0 0 10px #EDBB00)';
+      g.style.opacity = '0.85';
+      g.style.transition = 'none';
+    }
+
+    g.addEventListener('mousedown', onStart);
+    g.addEventListener('touchstart', onStart, { passive: true });
+  });
+
+  function onMove(e) {
+    if (!drag) return;
+    e.preventDefault();
+    var pos = svgCoords(e);
+    var dx = pos.x - drag.mouseX;
+    var dy = pos.y - drag.mouseY;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) drag.moved = true;
+    if (!drag.moved) return;
+    var nx = Math.max(26, Math.min(414, drag.startX + dx));
+    var ny = Math.max(26, Math.min(594, drag.startY + dy));
+    drag.g.setAttribute('transform', 'translate(' + (nx - drag.startX) + ',' + (ny - drag.startY) + ')');
+    drag.nx = nx;
+    drag.ny = ny;
+  }
+
+  function onEnd(e) {
+    if (!drag) return;
+    if (drag.moved && drag.nx !== undefined) {
+      dataArr[drag.idx].tx = Math.round(drag.nx);
+      dataArr[drag.idx].ty = Math.round(drag.ny);
+      renderFn();
+    } else {
+      // pas bougé → annuler le style
+      drag.g.style.filter = '';
+      drag.g.style.opacity = '';
+      drag.g.removeAttribute('transform');
+    }
+    drag = null;
+  }
+
+  svgEl.addEventListener('mousemove', onMove);
+  svgEl.addEventListener('touchmove', onMove, { passive: false });
+  svgEl.addEventListener('mouseup', onEnd);
+  svgEl.addEventListener('touchend', onEnd);
+  // annuler si on sort du SVG
+  svgEl.addEventListener('mouseleave', function() {
+    if (drag && drag.moved) onEnd();
+    else if (drag) {
+      drag.g.style.filter = '';
+      drag.g.style.opacity = '';
+      drag.g.removeAttribute('transform');
+      drag = null;
+    }
+  });
+}
