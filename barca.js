@@ -1101,7 +1101,7 @@ function doRadar() {
   });
 }
 
-/* TERRAIN HORIZONTAL — fiche joueur (700×210) */
+/* Terrain - fiche joueur (700×210) */
 
 function pitchHBase() {
   var W = 700, H = 260, lc = 'rgba(255,255,255,.45)', lw = 0.8;
@@ -1318,7 +1318,7 @@ function renderStats26() {
     }, 50);
   }
   else if (curStatCat === 'classement') {
-    var sects = { GK: '🧤 Gardiens', DF: '🏰 Défenseurs', MF: '⚙ Milieux', FW: '⚡ Attaquants' };
+    var sects = { GK: 'Gardiens', DF: 'Défenseurs', MF: 'Milieux', FW: 'Attaquants' };
     var html = '<div class="card p" style="flex:1;">';
     Object.keys(sects).forEach(function (gr) {
       var list = SQUAD.filter(function (q) { return q.gr === gr; }).sort(function (a, b) { return b.note - a.note; });
@@ -1627,7 +1627,7 @@ function resolvePlayer(val) {
   var allR = RECRUES_PREDEFINIES.concat(userRecrues);
   return allR[+pts[1]];
 }
-// génère la comparaison côte à côte entre deux joueurs
+// génèrer la comparaison côte à côte entre deux joueurs
 
 function doCmp() {
   var p1 = resolvePlayer(document.getElementById('cmpS1').value);
@@ -1956,42 +1956,42 @@ function mercatoBudget() {
 /* Définition des postes à analyser */
 var REC_POSTES = [
   {
-    id: 'GK', emoji: '🧤', lbl: 'Gardien de but',
+    id: 'GK', emoji: '', lbl: 'Gardien de but',
     filter: function (p) { return p.gr === 'GK'; },
     ideal: { minNote: 7.4, minDepth: 2, maxAge: 30 },
     desc: 'Joan García titulaire. Szczesny en fin de contrat. Ter Stegen prêté à Girona.'
   },
 
   {
-    id: 'RB', emoji: '↗️', lbl: 'Latéral droit',
+    id: 'RB', emoji: '', lbl: 'Latéral droit',
     filter: function (p) { return p.n.indexOf('Kounde') > -1 || p.n.indexOf('Cancelo') > -1 || p.n.indexOf('Gerard') > -1; },
     ideal: { minNote: 7.3, minDepth: 2, maxAge: 28 },
     desc: 'Cancelo en fin de prêt. Kounde 27 ans. Héctor Fort prêté à Elche (talent à surveiller). Chercher un autre lateral droit'
   },
 
   {
-    id: 'CB', emoji: '🏰', lbl: 'Défenseur central',
+    id: 'CB', emoji: '', lbl: 'Défenseur central',
     filter: function (p) { return p.gr === 'DF' && p.n.indexOf('Balde') < 0 && p.n.indexOf('Kounde') < 0 && p.n.indexOf('Gerard') < 0 && p.n.indexOf('Cancelo') < 0; },
     ideal: { minNote: 7.4, minDepth: 3, maxAge: 28 },
     desc: 'Cubarski (19) + Araujo excellent duo. Christensen blessures chroniques. Poste solide. recruter un defenseur pour remplacer Christensen en fin de contrat et possiblement le depart de Araujo'
   },
 
   {
-    id: 'LB', emoji: '↙️', lbl: 'Latéral gauche',
+    id: 'LB', emoji: '', lbl: 'Latéral gauche',
     filter: function (p) { return p.n.indexOf('Balde') > -1 || p.n.indexOf('Gerard') > -1; },
     ideal: { minNote: 7.3, minDepth: 2, maxAge: 27 },
     desc: 'Balde titulaire incontournable. Gerard en rotation. Profondeur à améliorer.'
   },
 
   {
-    id: 'MF', emoji: '⚙️', lbl: 'Milieu de terrain',
+    id: 'MF', emoji: '', lbl: 'Milieu de terrain',
     filter: function (p) { return p.gr === 'MF'; },
     ideal: { minNote: 7.3, minDepth: 5, maxAge: 27 },
     desc: 'Gavi peu présent (blessures). Bernal souvent blessé . Olomo et Firmin souvent irreguliers Frenkie 2 expulsions. Chercher un milieu libre pur faire reposer Pedri . Manque profondeur'
   },
 
   {
-    id: 'FW', emoji: '⚡', lbl: 'Attaquant / Ailier',
+    id: 'FW', emoji: '', lbl: 'Attaquant / Ailier',
     filter: function (p) { return p.gr === 'FW'; },
     ideal: { minNote: 7.4, minDepth: 4, maxAge: 29 },
     desc: 'Lewandowski fin de contrat juin 2026. Rashford prêt à décider. Yamal/Raphinha solides. chercher un attaquant pour former un trio . Chercher un ailier gauche fort'
@@ -2251,7 +2251,7 @@ function doPrets() {
       '<div style="width:44px;height:44px;border-radius:50%;background:' + p.col + ';display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;">' + ini(p.n) + '</div>' +
       '<div class="loan-out-info">' +
       '<div class="loan-out-name">' + p.n + '</div>' +
-      '<div class="loan-out-club">📍 ' + p.loanTo + '</div>' +
+      '<div class="loan-out-club">' + p.loanTo + '</div>' +
       '<div style="margin-top:4px;">' +
       '<span class="loan-out-stat">Note: <b style="color:' + noteColor + '">' + p.note_loan.toFixed(2) + '</b></span>' +
       '<span class="loan-out-stat">' + p.mp_loan + ' matchs</span>' +
@@ -2260,7 +2260,7 @@ function doPrets() {
       '<span class="loan-out-stat">Retour: ' + p.returns + '</span>' +
       '</div>' +
       '<div style="margin-top:6px;font-size:9px;color:var(--t2);">' + p.info + '</div>' +
-      '<div style="margin-top:4px;font-size:9px;font-style:italic;color:var(--t3);">💬 ' + p.note_barça + '</div>' +
+      '<div style="margin-top:4px;font-size:9px;font-style:italic;color:var(--t3);"> ' + p.note_barça + '</div>' +
       '</div>';
     grid.appendChild(card);
   });
@@ -2318,7 +2318,7 @@ function renderMercatoSquadList() {
   if (!el) return;
   el.innerHTML = '';
   var grps = { GK: [], DF: [], MF: [], FW: [] };
-  var grpLabels = { GK: '🧤 Gardiens', DF: '🏰 Défenseurs', MF: '⚙ Milieux', FW: '⚡ Attaquants' };
+  var grpLabels = { GK: 'Gardiens', DF: 'Défenseurs', MF: 'Milieux', FW: 'Attaquants' };
   SQUAD.forEach(function(p) { (grps[p.gr] || grps.MF).push(p); });
   ['GK','DF','MF','FW'].forEach(function(gr) {
     if (!grps[gr].length) return;
@@ -2379,7 +2379,7 @@ function renderMercatoRecruesList() {
 
   var hd1 = document.createElement('div');
   hd1.className = 'merc-group-hd merc-group-red';
-  hd1.textContent = '🔍 Analyse Cibles';
+  hd1.textContent = 'Analyse Cibles';
   el.appendChild(hd1);
 
   RECRUES_PREDEFINIES.forEach(function(p) {
@@ -2431,7 +2431,7 @@ function renderMercatoRecruesList() {
 
   var hd2 = document.createElement('div');
   hd2.className = 'merc-group-hd merc-group-blue';
-  hd2.textContent = '🔄 Prêtés — Rappeler';
+  hd2.textContent = '🔄 Prêtés - Rappeler';
   el.appendChild(hd2);
 
   PRETS.forEach(function(p) {
@@ -2976,7 +2976,7 @@ function doRecueCmp() {
   doMercato();
 })();
 
-/* ── Drag & Drop joueurs sur terrain SVG ── */
+/* Drag et Drop joueurs sur terrain SVG */
 function makeDraggable(svgEl, dataArr, renderFn) {
   var drag = null;
 
@@ -2992,7 +2992,7 @@ function makeDraggable(svgEl, dataArr, renderFn) {
     var idx = parseInt(g.getAttribute('data-drag-idx'), 10);
 
     function onStart(e) {
-      // poste vide → ouvrir picker, pas de drag
+      // poste vide, ouvrir picker, pas de drag
       if (!dataArr[idx] || (dataArr[idx].player === null && dataArr[idx].player !== undefined)) return;
       e.stopPropagation();
       var pos = svgCoords(e);
