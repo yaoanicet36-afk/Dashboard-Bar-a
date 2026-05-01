@@ -982,7 +982,7 @@ function buildSidebar() {
 
   // je regroupe par poste dans l'ordre GK > DF > MF > FW
   sb.innerHTML = '';
-  var sections = { GK: '🧤 Gardiens', DF: '🏰 Défenseurs', MF: '⚙ Milieux', FW: '⚡ Attaquants' };
+  var sections = { GK: 'Gardiens', DF: 'Défenseurs', MF: 'Milieux', FW: 'Attaquants' };
   Object.keys(sections).forEach(function (gr) {
     var players = SQUAD.filter(function (p) { return p.gr === gr; });
     var hd = document.createElement('div');
@@ -1041,8 +1041,8 @@ function doHero() {
   noteBadge.style.background = nB(p.note);
   noteBadge.style.color = nT(p.note);
   document.getElementById('hLoanBadge').innerHTML = p.loan
-    ? '<span class="loan-badge">📋 Prêt — ' + p.loanFrom + '</span>'
-    : (p.youth ? '<span class="youth-badge">🌱 La Masía</span>' : '');
+    ? '<span class="loan-badge">Prêt — ' + p.loanFrom + '</span>'
+    : (p.youth ? '<span class="youth-badge">La Masía</span>' : '');
   document.getElementById('hMeta').textContent =
     (FLAGS[p.nat] || '') + ' ' + p.nat + ' · ' + p.age + ' ans · ' + p.h + ' · ' + p.mv;
 
