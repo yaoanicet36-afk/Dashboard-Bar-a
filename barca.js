@@ -761,7 +761,7 @@ var PRETS = [
     n: 'Iñaki Peña', p: 'GK', age: 26, col: '#5a6070',
     loanTo: 'Elche (LaLiga2)', note_loan: 6.85, mp_loan: 18, g_loan: 0, a_loan: 0,
     note_barça: 'Dépend du Barça comme 3ème GK. Bonnes performances à Elche.',
-    returns: 'Juin 2026', info: '26 ans · Contrat Barça prolongé (2029). Titulaire en debut de saison mais il a perdu sa place chez Elche avec ~70% saves.'
+    returns: 'Juin 2026', info: '26 ans · Contrat Barça prolongé (2029). Titulaire en debut de saison chez Elche avec environ 70% saves, mais il a perdu cette place de titulaire'
   },
 
   {
@@ -782,7 +782,7 @@ var PRETS = [
     n: 'Ter Stegen', p: 'GK', age: 33, col: '#5a6070',
     loanTo: 'Girona (La Liga)', note_loan: 6.72, mp_loan: 12, g_loan: 0, a_loan: 0,
     note_barça: 'Conflit contractuel avec le Barça. Suspendu comme capitaine puis prêté en jan. 2026.',
-    returns: 'Juin 2026', info: '33 ans · Capitaine suspendu après refus médical. Prêté à Girona en janvier 2026. Situation compliquée, dnc chercher une porte de sortie.'
+    returns: 'Juin 2026', info: '33 ans . Prêté à Girona en janvier 2026.Il vit une Situation compliquée.'
   },
 
   {
@@ -1283,7 +1283,7 @@ function renderStats26() {
       mkStatBox('Duels gagnés', p.du + '%', '', '#3498db') +
       mkStatBox('Aériens gagnés', p.aerienG || 0, '', '#9b59b6') +
       '</div>' +
-      '<div class="card p"><div class="stitle">Classement pressing — Effectif complet</div>' +
+      '<div class="card p"><div class="stitle">Classement pressing - Effectif complet</div>' +
       '<div style="display:flex;flex-direction:column;gap:5px;margin-top:6px;">' +
       sorted.slice(0, 15).map(function (q) {
         var w = Math.round(((q.pressing || 0) / maxP) * 100);
@@ -1557,7 +1557,7 @@ function openPicker(idx) {
   var gr = Array.isArray(slot.gr) ? slot.gr : [slot.gr];
   var compat = SQUAD.filter(function (p) { return !used[p.n] && gr.some(function (g) { return p.gr === g; }); }).sort(function (a, b) { return b.note - a.note; });
   var other = SQUAD.filter(function (p) { return !used[p.n] && !gr.some(function (g) { return p.gr === g; }); }).sort(function (a, b) { return b.note - a.note; });
-  var html = '<div class="picker-section">✅ Compatibles (' + slot.role + ')</div>';
+  var html = '<div class="picker-section">Compatibles (' + slot.role + ')</div>';
   html += compat.map(function (p) { return '<div class="picker-item" onclick="pickSlot(\'' + p.n + '\')">' + imgEl(p.ph, p.col, 32) + '<div style="flex:1;"><div style="font-size:11px;font-weight:600;">' + p.n + (p.loan ? '<span class="loan-badge">Prêt</span>' : '') + '</div><div style="font-size:9px;color:var(--t2);">' + p.p + ' · ' + p.g + 'G ' + p.a + 'A · ' + p.min + 'min</div></div><span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:' + nB(p.note) + ';color:' + nT(p.note) + ';">' + p.note.toFixed(2) + '</span></div>'; }).join('');
   if (other.length) { html += '<div class="picker-section">⚠ Autres postes</div>'; html += other.map(function (p) { return '<div class="picker-item" onclick="pickSlot(\'' + p.n + '\')">' + imgEl(p.ph, p.col, 32) + '<div style="flex:1;"><div style="font-size:11px;font-weight:600;">' + p.n + '</div><div style="font-size:9px;color:var(--t2);">' + p.p + ' (hors poste)</div></div><span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:' + nB(p.note) + ';color:' + nT(p.note) + ';">' + p.note.toFixed(2) + '</span></div>'; }).join(''); }
   document.getElementById('pickerList').innerHTML = html;
@@ -1595,10 +1595,10 @@ function drawXI() {
 
 function buildSelects() {
   var s1 = document.getElementById('cmpS1'); s1.innerHTML = '';
-  var grpBarca = document.createElement('optgroup'); grpBarca.label = '🔵 Effectif Barça';
+  var grpBarca = document.createElement('optgroup'); grpBarca.label = 'Effectif Barça';
   SQUAD.forEach(function (p, i) { var o = document.createElement('option'); o.value = 'barca_' + i; o.textContent = p.n + ' (' + p.p + ')'; grpBarca.appendChild(o); });
   s1.appendChild(grpBarca);
-  var grpRec = document.createElement('optgroup'); grpRec.label = '🔍 Analyse Cibles';
+  var grpRec = document.createElement('optgroup'); grpRec.label = 'Analyse Cibles';
   RECRUES_PREDEFINIES.forEach(function (p, i) { var o = document.createElement('option'); o.value = 'recrue_' + i; o.textContent = p.n + ' - ' + (p.club||'?'); grpRec.appendChild(o); });
   s1.appendChild(grpRec);
   fillCmpS2();
@@ -1637,7 +1637,7 @@ function doCmp() {
   document.getElementById('cmpL2').textContent = p2.n.split(' ').pop();
   var mx = { g: Math.max(p1.g, p2.g, 1), a: Math.max(p1.a, p2.a, 1), xg: Math.max(p1.xg || 0, p2.xg || 0, .1), min: Math.max(p1.min, p2.min, 1), tck: Math.max(p1.tck, p2.tck, 1), int: Math.max(p1.int, p2.int, 1), kp: Math.max(p1.kp, p2.kp, 1), drb: Math.max(p1.drb, p2.drb, 1) };
   var rows = [
-    { l: 'Buts', k: 'g', col: '#e05050' }, { l: '🎯 Passes déc.', k: 'a', col: '#5599ee' },
+    { l: 'Buts', k: 'g', col: '#e05050' }, { l: 'Passes déc.', k: 'a', col: '#5599ee' },
     { l: 'xG', fn: function (p) { return (p.xg || 0).toFixed(1); }, col: '#9b59b6' },
     { l: 'Minutes', fn: function (p) { return p.min.toLocaleString(); }, col: '#7f8c8d' },
     { l: 'G+A / 90', fn: ga90, col: 'var(--G)' },
@@ -1691,7 +1691,7 @@ function doCmp() {
 // stats de la saison 2025-26 (fbref + fotmob + transferMarket)
 
 var RECRUES_PREDEFINIES = [
-  {n:'Victor Osimhen',p:'FW',gr:'FW',age:27,mv:'75M€',mvNum:70,club:'Naples',
+  {n:'Victor Osimhen',p:'FW',gr:'FW',age:27,mv:'75M€',mvNum:70,club:'Galatasaray',
    mp:29,st:26,min:2276,g:19,a:6,xg:15.2,note:7.7,
    nat:'NG',col:'#0048A0',ph:'https://assets-fr.imgfoot.com/media/cache/150x150/portrait/victor-osimhen.png',
    tir:117,kp:8,drb:30,cv:50.4,tck:13,int:6,
@@ -2098,13 +2098,13 @@ function renderRecTable(pos) {
   /* Ligne séparateur */
   if (barcaPlayers.length) {
     var sep = document.createElement('tr');
-    sep.innerHTML = '<td colspan="10" style="padding:4px 10px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);background:var(--bg3);">🔵 Effectif actuel Barça</td>';
+    sep.innerHTML = '<td colspan="10" style="padding:4px 10px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);background:var(--bg3);">Effectif actuel Barça</td>';
     tbody.appendChild(sep);
     barcaPlayers.sort(function (a, b) { return b.note - a.note; }).forEach(function (p) { mkRow(p, false, -1); });
   }
   if (allRecrues.length) {
     var sep2 = document.createElement('tr');
-    sep2.innerHTML = '<td colspan="10" style="padding:4px 10px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);background:rgba(165,0,68,.08);">🔍 Analyse Cibles</td>';
+    sep2.innerHTML = '<td colspan="10" style="padding:4px 10px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);background:rgba(165,0,68,.08);">Analyse Cibles</td>';
     tbody.appendChild(sep2);
 
     /* Pré-définies (non supprimables) */
@@ -2357,7 +2357,7 @@ function renderMercatoSquadList() {
       var btn = document.createElement('button');
       btn.className = sold ? 'merc-btn merc-btn-cancel' : 'merc-btn merc-btn-sell';
       btn.title = sold ? 'Annuler la vente' : 'Mettre en vente';
-      btn.textContent = sold ? '↩' : '💸';
+      btn.textContent = sold ? '↩' : 'vendre';
       btn.onclick = (function(player, wasold) {
         return function() {
           if (wasold || mercatoVendus[player.n]) { delete mercatoVendus[player.n]; }
@@ -2416,7 +2416,7 @@ function renderMercatoRecruesList() {
     d.appendChild(nb);
     var btn = document.createElement('button');
     btn.className = bought ? 'merc-btn merc-btn-cancel' : 'merc-btn merc-btn-buy';
-    btn.textContent = bought ? '↩' : '✅ Acheter';
+    btn.textContent = bought ? '↩' : 'Acheter';
     btn.onclick = (function(player, wasbought) {
       return function() {
         if (wasbought || mercatoAchetes[player.n]) { delete mercatoAchetes[player.n]; }
@@ -2431,7 +2431,7 @@ function renderMercatoRecruesList() {
 
   var hd2 = document.createElement('div');
   hd2.className = 'merc-group-hd merc-group-blue';
-  hd2.textContent = '🔄 Prêtés - Rappeler';
+  hd2.textContent = 'Prêtés - Rappeler';
   el.appendChild(hd2);
 
   PRETS.forEach(function(p) {
@@ -2493,11 +2493,11 @@ function updateMercatoBudget() {
   var eff = getMercatoEffectif();
   var avgNote = eff.length ? (eff.reduce(function(s,p){return s+(p.note||6.5);},0)/eff.length).toFixed(2) : '—';
   var items = [
-    {cls:'merc-enc', label:'📤 Vendus',   val:soldCount, sub:'+'+b.enc+'M€'},
-    {cls:'merc-dep', label:'✅ Achetés',  val:buyCount,  sub:'-'+b.dep+'M€'},
-    {cls:'merc-rec', label:'🔄 Rappelés', val:recCount,  sub:''},
+    {cls:'merc-enc', label:'Vendus',   val:soldCount, sub:'+'+b.enc+'M€'},
+    {cls:'merc-dep', label:'Achetés',  val:buyCount,  sub:'-'+b.dep+'M€'},
+    {cls:'merc-rec', label:'Rappelés', val:recCount,  sub:''},
     {cls:'merc-sol '+(b.solde>=0?'pos':'neg'), label:'Solde', val:(b.solde>=0?'+':'')+b.solde+'M€', sub:''},
-    {cls:'',          label:'👥 Effectif', val:eff.length, sub:''},
+    {cls:'',          label:'Effectif', val:eff.length, sub:''},
     {cls:'',          label:'Note moy.',  val:avgNote,   sub:''},
   ];
   el.innerHTML = items.map(function(item) {
@@ -2630,7 +2630,7 @@ function openMercatoPicker(idx) {
     listEl.appendChild(d);
   }
 
-  addSection('✅ Compatibles (' + slot.role + ')');
+  addSection('Compatibles (' + slot.role + ')');
   compat.forEach(addPlayerRow);
   if (other.length) {
     addSection('⚠ Autres postes');
@@ -2667,7 +2667,7 @@ function doRecues() {
   if (filEl) {
     filEl.innerHTML = '';
     ['ALL','GK','DF','MF','FW'].forEach(function(pos) {
-      var labels = {ALL:'Tous',GK:'🧤 GK',DF:'🏰 DF',MF:'⚙ MF',FW:'⚡ FW'};
+      var labels = {ALL:'Tous',GK:'GK',DF:'DF',MF:'MF',FW:'FW'};
       var btn = document.createElement('button');
       btn.className = 'form-btn' + (recuePosFilter === pos ? ' on' : '');
       btn.textContent = labels[pos];
