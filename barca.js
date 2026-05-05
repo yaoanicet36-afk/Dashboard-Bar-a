@@ -543,7 +543,7 @@ var SQUAD = [
     info: 'Retour progressif après longue blessure genou.'
   },
   {
-    n: 'Xavi Espart', p: 'MF', gr: 'MF', num: 36, age: 18, h: '1,74m', mv: '—',
+    n: 'Xavi Espart', p: 'MF', gr: 'MF', num: 36, age: 18, h: '1,74m', mv: '-',
     mp: 4, st: 1, min: 119, yc: 0, rc: 0,
     xg: 0.0, g: 0, a: 0, note: 6.5, nat: 'ES', col: '#1D9E75', ph: 'Xavi Espart',
     tir: 0, kp: 2, drb: 3, cv: 0, tck: 3, int: 5,
@@ -561,7 +561,7 @@ var SQUAD = [
   },
   // défenseurs
   {
-    n: 'Jofre Torrents', p: 'DF', gr: 'DF', num: 38, age: 19, h: '1,85m', mv: '—',
+    n: 'Jofre Torrents', p: 'DF', gr: 'DF', num: 38, age: 19, h: '1,85m', mv: '-',
     mp: 4, st: 1, min: 112, yc: 0, rc: 0,
     xg: 0.0, g: 0, a: 0, note: 6.45, nat: 'ES', col: '#004D98', ph: 'Jofre Torrents',
     tir: 0, kp: 0, drb: 0, cv: 0, tck: 2, int: 0,
@@ -597,7 +597,7 @@ var SQUAD = [
   },
   // milieux
   {
-    n: 'Toni Fernández', p: 'MF', gr: 'MF', num: 40, age: 17, h: '1,78m', mv: '—',
+    n: 'Toni Fernández', p: 'MF', gr: 'MF', num: 40, age: 17, h: '1,78m', mv: '-',
     mp: 1, st: 1, min: 45, yc: 0, rc: 0,
     xg: 0.0, g: 0, a: 0, note: 6.35, nat: 'ES', col: '#1D9E75', ph: 'Toni Fernández',
     tir: 0, kp: 0, drb: 0, cv: 0, tck: 0, int: 0,
@@ -614,7 +614,7 @@ var SQUAD = [
     info: 'Jeune talent 17 ans · 1 match.', youth: true
   },
   {
-    n: 'Thomas Marques', p: 'MF', gr: 'MF', num: 41, age: 19, h: '1,82m', mv: '—',
+    n: 'Thomas Marques', p: 'MF', gr: 'MF', num: 41, age: 19, h: '1,82m', mv: '-',
     mp: 1, st: 0, min: 7, yc: 0, rc: 0,
     xg: 0.0, g: 0, a: 0, note: 6.5, nat: 'ES', col: '#1D9E75', ph: 'Thomas Marques',
     tir: 0, kp: 0, drb: 0, cv: 0, tck: 0, int: 0,
@@ -631,7 +631,7 @@ var SQUAD = [
     info: 'Milieu 19 ans · 7 minutes jouées.', youth: true
   },
   {
-    n: 'Daniel Rodriguez', p: 'MF', gr: 'MF', num: 42, age: 20, h: '1,79m', mv: '—',
+    n: 'Daniel Rodriguez', p: 'MF', gr: 'MF', num: 42, age: 20, h: '1,79m', mv: '-',
     mp: 0, st: 0, min: 0, yc: 0, rc: 0,
     xg: 0.0, g: 0, a: 0, note: 6.51, nat: 'ES', col: '#1D9E75', ph: 'Daniel Rodriguez',
     tir: 0, kp: 0, drb: 0, cv: 0, tck: 0, int: 0,
@@ -649,7 +649,7 @@ var SQUAD = [
   },
   // gardiens
   {
-    n: 'Diego Kochen', p: 'GK', gr: 'GK', num: 43, age: 20, h: '1,85m', mv: '—',
+    n: 'Diego Kochen', p: 'GK', gr: 'GK', num: 43, age: 20, h: '1,85m', mv: '-',
     mp: 0, st: 0, min: 0, yc: 0, rc: 0,
     xg: 0.0, g: 0, a: 0, note: 6.53, nat: 'US', col: '#5a6070', ph: 'Diego Kochen',
     tir: 0, kp: 0, drb: 0, cv: 0, tck: 0, int: 0,
@@ -667,7 +667,7 @@ var SQUAD = [
   },
   // attaquants
   {
-    n: 'Juan Hernández', p: 'FW', gr: 'FW', num: 44, age: 18, h: '1,80m', mv: '—',
+    n: 'Juan Hernández', p: 'FW', gr: 'FW', num: 44, age: 18, h: '1,80m', mv: '-',
     mp: 0, st: 0, min: 0, yc: 0, rc: 0,
     xg: 0.0, g: 0, a: 0, note: 6.57, nat: 'ES', col: '#A50044', ph: 'Juan Hernández',
     tir: 0, kp: 0, drb: 0, cv: 0, tck: 0, int: 0,
@@ -685,7 +685,7 @@ var SQUAD = [
   },
   // défenseurs
   {
-    n: 'Alvaro Cortés', p: 'DF', gr: 'DF', num: 45, age: 21, h: '1,80m', mv: '—',
+    n: 'Alvaro Cortés', p: 'DF', gr: 'DF', num: 45, age: 21, h: '1,80m', mv: '-',
     mp: 0, st: 0, min: 0, yc: 0, rc: 0,
     xg: 0.0, g: 0, a: 0, note: 6.6, nat: 'ES', col: '#004D98', ph: 'Alvaro Cortés',
     tir: 0, kp: 0, drb: 0, cv: 0, tck: 0, int: 0,
@@ -703,7 +703,7 @@ var SQUAD = [
   },
   // gardiens
   {
-    n: 'Eder Aller', p: 'GK', gr: 'GK', num: 46, age: 19, h: '1,88m', mv: '—',
+    n: 'Eder Aller', p: 'GK', gr: 'GK', num: 46, age: 19, h: '1,88m', mv: '-',
     mp: 0, st: 0, min: 0, yc: 0, rc: 0,
     xg: 0.0, g: 0, a: 0, note: 6.58, nat: 'ES', col: '#5a6070', ph: 'Eder Aller',
     tir: 0, kp: 0, drb: 0, cv: 0, tck: 0, int: 0,
@@ -720,7 +720,7 @@ var SQUAD = [
     info: 'Eder Aller · GK · 19 ans.', youth: true
   },
   {
-    n: 'Iñaki Peña', p: 'GK', gr: 'GK', num: 27, age: 27, h: '1,83m', mv: '—',
+    n: 'Iñaki Peña', p: 'GK', gr: 'GK', num: 27, age: 27, h: '1,83m', mv: '-',
     mp: 0, st: 0, min: 0, yc: 0, rc: 0,
     xg: 0.0, g: 0, a: 0, note: 6.34, nat: 'ES', col: '#5a6070', ph: 'Iñaki Peña',
     tir: 0, kp: 0, drb: 0, cv: 0, tck: 0, int: 0,
@@ -738,7 +738,7 @@ var SQUAD = [
   },
   // milieux
   {
-    n: 'Guillermo Fernandez', p: 'MF', gr: 'MF', num: 48, age: 17, h: '1,75m', mv: '—',
+    n: 'Guillermo Fernandez', p: 'MF', gr: 'MF', num: 48, age: 17, h: '1,75m', mv: '-',
     mp: 0, st: 0, min: 0, yc: 0, rc: 0,
     xg: 0.0, g: 0, a: 0, note: 6.48, nat: 'ES', col: '#1D9E75', ph: 'Guillermo Fernandez',
     tir: 0, kp: 0, drb: 0, cv: 0, tck: 0, int: 0,
